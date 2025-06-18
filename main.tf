@@ -4,6 +4,17 @@ provider "aws" {
   region = "eu-west-3"
 }
 
+# Generate a word-based password for Ubuntu user
+resource "random_pet" "ubuntu_password" {
+  length = 3
+  separator = "-"
+}
+
+resource "random_integer" "password_suffix" {
+  min = 100
+  max = 999
+}
+
 resource "aws_vpc" "main" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
@@ -76,20 +87,9 @@ resource "aws_instance" "ubuntu" {
   key_name               = "ubuntu-perso-key"
   associate_public_ip_address = true
 
-  user_data = <<-EOF
-              #!/bin/bash
-              apt-get update
-              apt-get install -y xfce4 xfce4-goodies xrdp firefox
-              echo xfce4-session > /home/ubuntu/.xsession
-              chown ubuntu:ubuntu /home/ubuntu/.xsession
-              systemctl enable xrdp
-              systemctl restart xrdp
-              echo "ubuntu:Ubuntu2024" | chpasswd
-              chown xrdp:xrdp /etc/xrdp/key.pem
-              chown xrdp:xrdp /etc/xrdp/cert.pem
-              chmod 600 /etc/xrdp/key.pem
-              chmod 644 /etc/xrdp/cert.pem
-              EOF
+  user_data = templatefile("user_data.sh", {
+    ubuntu_password = "${random_pet.ubuntu_password.id}${random_integer.password_suffix.result}"
+  })
 
   tags = {
     Name = "ubuntu-perso-rdp"

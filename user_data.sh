@@ -5,7 +5,7 @@ echo xfce4-session > /home/ubuntu/.xsession
 chown ubuntu:ubuntu /home/ubuntu/.xsession
 systemctl enable xrdp
 systemctl restart xrdp
-echo "ubuntu:Ubuntu2024" | chpasswd
+echo "ubuntu:${ubuntu_password}" | chpasswd
 chown xrdp:xrdp /etc/xrdp/key.pem
 chown xrdp:xrdp /etc/xrdp/cert.pem
 chmod 600 /etc/xrdp/key.pem
