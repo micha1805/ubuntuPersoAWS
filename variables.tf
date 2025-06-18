@@ -1,26 +1,28 @@
 variable "my_ip" {
-  description = "Your current public IP address"
+  description = "Your public IP with /32"
   type        = string
 }
 
 variable "aws_region" {
-  default = "eu-west-3"
+  description = "AWS region"
+  type        = string
+  default     = "eu-west-3"
 }
 
 variable "aws_az" {
-  default = "eu-west-3a"
-}
-
-variable "my_ip" {
-  description = "Your public IP with /32"
+  description = "AWS availability zone"
   type        = string
+  default     = "eu-west-3a"
 }
 
 variable "public_key_path" {
   description = "Path to your SSH public key"
   type        = string
+  default     = "~/.ssh/id_rsa.pub"
 }
 
 variable "instance_type" {
-  default = "t3.small"
+  description = "EC2 instance type"
+  type        = string
+  default     = "t3.small"
 }
